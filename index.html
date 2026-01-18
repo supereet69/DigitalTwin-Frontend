@@ -1,127 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Digital Twin Platform | Metal Recovery</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital Twin Platform</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
+*{margin:0;padding:0;box-sizing:border-box}
 
 body{
     min-height:100vh;
-    background: radial-gradient(circle at top, #0b1220, #020617 70%);
+    background:radial-gradient(circle at top, #0b1220, #020617 70%);
+    font-family:Inter,sans-serif;
     color:#e5e7eb;
-    font-family:Inter, sans-serif;
     display:flex;
     justify-content:center;
     align-items:center;
-    padding:30px;
+    padding:20px;
 }
 
-.container{
+.app{
     width:100%;
     max-width:1100px;
     background:linear-gradient(180deg,#020617,#020617);
     border:1px solid #1f2933;
     border-radius:22px;
-    padding:50px;
-    box-shadow:0 0 60px rgba(56,189,248,0.15);
+    padding:50px 50px 35px;
+    box-shadow:0 0 70px rgba(56,189,248,0.15);
+    display:grid;
+    grid-template-rows:auto 1fr auto auto;
+    gap:35px;
 }
 
+/* ---------- HEADER ---------- */
 .header{
     text-align:center;
-    margin-bottom:40px;
 }
 
-.header h1{
-    font-family:Orbitron, sans-serif;
-    font-size:2.2rem;
-    letter-spacing:1px;
-    color:#38bdf8;
-}
-
-.header h2{
-    margin-top:10px;
-    font-size:1.1rem;
-    font-weight:400;
-    color:#cbd5f5;
-}
-
-.institute{
-    margin-top:8px;
+.college{
     font-size:0.95rem;
     color:#94a3b8;
+    letter-spacing:0.5px;
 }
 
-.info-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:30px;
-    margin-top:30px;
+.title{
+    font-family:Orbitron,sans-serif;
+    font-size:2.2rem;
+    color:#38bdf8;
+    margin:10px 0;
+    letter-spacing:1px;
 }
 
-.card{
-    background:linear-gradient(180deg,#020617,#020617);
-    border:1px solid #1f2933;
-    border-radius:16px;
-    padding:22px;
-}
-
-.card h3{
-    font-size:1rem;
-    margin-bottom:10px;
-    color:#22c55e;
-}
-
-.card p{
-    font-size:0.9rem;
+.desc{
+    max-width:750px;
+    margin:0 auto;
+    font-size:0.95rem;
     color:#cbd5f5;
     line-height:1.6;
 }
 
-.team span{
-    display:block;
-    margin-top:6px;
+/* ---------- BUTTON ZONE ---------- */
+.center-actions{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:22px;
 }
 
-.buttons{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:30px;
-    margin-top:50px;
-}
-
-.btn{
+.dt-btn{
+    width:380px;
+    padding:22px;
+    border-radius:18px;
     background:transparent;
     border:2px solid #38bdf8;
-    border-radius:18px;
-    padding:28px;
-    font-family:Orbitron, sans-serif;
-    font-size:1rem;
     color:white;
+    font-family:Orbitron,sans-serif;
+    font-size:1rem;
+    letter-spacing:0.5px;
     cursor:pointer;
     transition:0.3s;
     text-align:center;
-    position:relative;
-    overflow:hidden;
 }
 
-.btn:hover{
-    background:linear-gradient(135deg,#2563eb,#22c55e);
-    border-color:transparent;
-    box-shadow:0 0 25px rgba(56,189,248,0.6);
-    transform:translateY(-3px);
-}
-
-.btn small{
+.dt-btn span{
     display:block;
     margin-top:8px;
     font-family:Inter;
     font-size:0.75rem;
     color:#e5e7eb;
+}
+
+.dt-btn:hover{
+    background:linear-gradient(135deg,#2563eb,#22c55e);
+    border-color:transparent;
+    box-shadow:0 0 25px rgba(56,189,248,0.7);
+    transform:translateY(-3px);
 }
 
 .disabled{
@@ -136,9 +112,34 @@ body{
     transform:none;
 }
 
+/* ---------- TEAM / MENTORS ---------- */
+.bottom-info{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:30px;
+}
+
+.info-box{
+    border:1px solid #1f2933;
+    border-radius:14px;
+    padding:18px 22px;
+}
+
+.info-box h3{
+    font-size:0.9rem;
+    margin-bottom:8px;
+    color:#22c55e;
+}
+
+.info-box p{
+    font-size:0.85rem;
+    line-height:1.6;
+    color:#cbd5f5;
+}
+
+/* ---------- FOOTER ---------- */
 .footer{
     text-align:center;
-    margin-top:40px;
     font-size:0.75rem;
     color:#64748b;
 }
@@ -147,57 +148,57 @@ body{
 
 <body>
 
-<div class="container">
+<div class="app">
 
+    <!-- ===== HEADER ===== -->
     <div class="header">
-        <h1>DIGITAL TWIN PLATFORM</h1>
-        <h2>Bio-Hydrometallurgical Metal Recovery from Spent Li-Ion Batteries</h2>
-        <div class="institute">Department of Chemical Engineering, YOUR COLLEGE NAME</div>
+        <div class="college">Department of Chemical Engineering, YOUR COLLEGE NAME</div>
+        <div class="title">DIGITAL TWIN PLATFORM</div>
+        <div class="desc">
+            Physics-informed digital twins for bio-hydrometallurgical and chemical leaching
+            of spent lithium-ion battery black mass. The platform enables prediction,
+            anomaly analysis, and operational optimization of metal recovery processes.
+        </div>
     </div>
 
-    <div class="info-grid">
+    <!-- ===== CENTER BUTTONS ===== -->
+    <div class="center-actions">
 
-        <div class="card">
-            <h3>Project Overview</h3>
-            <p>
-                This platform hosts physics-informed digital twins representing biological and chemical
-                leaching mechanisms for metal recovery from spent lithium-ion battery black mass.
-                The twins integrate kinetic modeling, anomaly simulation, and optimization to support
-                process understanding and operational decision-making.
-            </p>
-        </div>
-
-        <div class="card team">
-            <h3>Team & Guidance</h3>
-            <p>
-                <b>Team Members:</b>
-                <span>• Bolt Naik</span>
-                <span>• Teammate 1</span>
-                <span>• Teammate 2</span>
-            </p>
-            <p style="margin-top:10px;">
-                <b>Project Guides:</b>
-                <span>• Dr. Mentor Name 1</span>
-                <span>• Dr. Mentor Name 2</span>
-            </p>
-        </div>
-
-    </div>
-
-    <div class="buttons">
-
-        <div class="btn" onclick="window.open('https://biodigitaltwin.streamlit.app/', '_blank')">
+        <div class="dt-btn" onclick="window.open('https://biodigitaltwin.streamlit.app/','_blank')">
             🧪 BIO-LEACHING DIGITAL TWIN
-            <small>Microbial kinetics • Anomaly detection • Optimization</small>
+            <span>Microbial kinetics • Fault simulation • Optimization</span>
         </div>
 
-        <div class="btn disabled">
+        <div class="dt-btn disabled">
             ⚗ CHEMICAL LEACHING DIGITAL TWIN
-            <small>Coming soon</small>
+            <span>Coming soon</span>
         </div>
 
     </div>
 
+    <!-- ===== TEAM / MENTORS ===== -->
+    <div class="bottom-info">
+
+        <div class="info-box">
+            <h3>Team Members</h3>
+            <p>
+                • Bolt Naik<br>
+                • Teammate 1<br>
+                • Teammate 2
+            </p>
+        </div>
+
+        <div class="info-box">
+            <h3>Project Mentors</h3>
+            <p>
+                • Dr. Mentor Name 1<br>
+                • Dr. Mentor Name 2
+            </p>
+        </div>
+
+    </div>
+
+    <!-- ===== FOOTER ===== -->
     <div class="footer">
         Digital Twin Research Platform • Version 1.0 • Academic Demonstration
     </div>

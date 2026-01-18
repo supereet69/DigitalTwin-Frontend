@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Process Digital Twin Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+            overflow: hidden;
+            color: #ffffff;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 90vw;
+            max-height: 90vh;
+        }
+
+        .card {
+            background: linear-gradient(145deg, #1e1e2e, #2a2a3e);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem 2.5rem;
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(255, 255, 255, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.6s;
+        }
+
+        .card:hover::before {
+            left: 100%;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 
+                0 35px 70px rgba(0, 0, 0, 0.6),
+                0 0 0 1px rgba(255, 255, 255, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .title {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffffff, #a8b8ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            font-size: clamp(1rem, 2.5vw, 1.25rem);
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            position: relative;
+            padding: 1.25rem 2.5rem;
+            font-size: clamp(1rem, 2vw, 1.125rem);
+            font-weight: 600;
+            color: #ffffff;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            overflow: hidden;
+            min-height: 64px;
+            box-shadow: 0 12px 24px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn:active {
+            transform: translateY(-2px) scale(1.01);
+        }
+
+        .btn-bio {
+            background: linear-gradient(135deg, #00c9ff 0%, #92fe9d 100%);
+            box-shadow: 0 12px 24px rgba(0, 201, 255, 0.4);
+        }
+
+        .btn-bio:hover {
+            box-shadow: 0 20px 40px rgba(0, 201, 255, 0.6);
+        }
+
+        .btn-chemical {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ffa726 100%);
+            box-shadow: 0 12px 24px rgba(255, 107, 107, 0.4);
+        }
+
+        .btn-chemical:hover {
+            box-shadow: 0 20px 40px rgba(255, 107, 107, 0.6);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+                gap: 1.5rem;
+            }
+            
+            .card {
+                padding: 2rem 1.5rem;
+                border-radius: 20px;
+            }
+            
+            .buttons {
+                gap: 1.25rem;
+            }
+            
+            .btn {
+                padding: 1rem 2rem;
+                min-height: 56px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 1.5rem 1rem;
+            }
+        }
+
+        /* Animated background particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    
+    <div class="container">
+        <div class="card">
+            <h1 class="title">Process Digital Twin Platform</h1>
+            <p class="subtitle">Select Leaching Mechanism</p>
+            
+            <div class="buttons">
+                <a href="https://biodigitaltwin.streamlit.app/" class="btn btn-bio" target="_blank" rel="noopener noreferrer">
+                    Bio-Leaching Digital Twin
+                </a>
+                <button class="btn btn-chemical" onclick="handleChemicalClick()">
+                    Chemical Leaching Digital Twin
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleChemicalClick() {
+            // Coming soon alert with modern styling
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                backdrop-filter: blur(10px);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 1000;
+                animation: fadeIn 0.3s ease;
+            `;
+            
+            modal.innerHTML = `
+                <div style="
+                    background: linear-gradient(145deg, #2a2a3e, #1e1e2e);
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    border-radius: 20px;
+                    padding: 3rem 2rem;
+                    text-align: center;
+                    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+                    max-width: 90vw;
+                    max-height: 90vh;
+                ">
+                    <h2 style="
+                        color: #ff6b6b;
+                        margin-bottom: 1rem;
+                        font-size: 1.5rem;
+                    ">Coming Soon</h2>
+                    <p style="
+                        color: rgba(255, 255, 255, 0.8);
+                        margin-bottom: 2rem;
+                        line-height: 1.6;
+                    ">
+                        Chemical Leaching Digital Twin is under development.
+                        <br>
+                        Stay tuned for the upcoming release!
+                    </p>
+                    <button onclick="this.parentElement.parentElement.remove()" style="
+                        background: linear-gradient(135deg, #ff6b6b, #ffa726);
+                        border: none;
+                        border-radius: 12px;
+                        padding: 0.75rem 2rem;
+                        color: white;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: transform 0.2s;
+                    " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                        Got it!
+                    </button>
+                </div>
+            `;
+            
+            modal.id = 'coming-soon-modal';
+            document.body.appendChild(modal);
+            
+            // Also log to console
+            console.log('Chemical Leaching Digital Twin - Coming soon!');
+        }
+
+        // Add floating particles for extra polish
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = window.innerWidth < 768 ? 20 : 40;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.width = Math.random() * 4 + 2 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Add fade-in animation for card
+        window.addEventListener('load', () => {
+            const card = document.querySelector('.card');
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            setTimeout(() => {
+                card.style.transition = 'all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, 100);
+            createParticles();
+        });
+
+        // Prevent body scroll when modal is open
+        document.addEventListener('click', (e) => {
+            if (e.target.id === 'coming-soon-modal') {
+                e.target.remove();
+            }
+        });
+
+        // Add subtle breathing animation to title
+        setInterval(() => {
+            const title = document.querySelector('.title');
+            title.style.transform = `scale(${1 + Math.sin(Date.now() * 0.001) * 0.02})`;
+        }, 50);
+    </script>
+</body>
+</html>

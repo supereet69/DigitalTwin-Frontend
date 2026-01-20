@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Leaching Digital Twin Platform</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root{
+      --bg0:#020308;
+      --bg1:#050812;
+
+      --card: rgba(10,14,26,.72);
+      --card2: rgba(10,14,26,.52);
+
+      --border: rgba(255,255,255,.08);
+      --border2: rgba(255,255,255,.14);
+
+      --text:#f7fafc;
+      --muted:#a3adc6;
+      --muted2:#7f8aa6;
+
+      --blue:#4f8bff;
+      --teal:#23c9b7;
+      --red:#ff5d5d;
+      --amber:#ffcc66;
+
+      --shadow: 0 28px 80px rgba(0,0,0,.75);
+
+      --radius: 22px;
+      --radius2: 16px;
+
+      --glowBlue: 0 0 0 4px rgba(79,139,255,.18);
+      --glowTeal: 0 0 0 4px rgba(35,201,183,.18);
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+
+    body{
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Ubuntu;
+      color:var(--text);
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:24px;
+
+      background:
+        radial-gradient(1200px 600px at 15% 0%, rgba(79,139,255,.16), transparent 55%),
+        radial-gradient(900px 500px at 85% 15%, rgba(35,201,183,.12), transparent 55%),
+        radial-gradient(circle at top, #1a2237 0%, #070914 45%, #020308 100%);
+      overflow-x:hidden;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        linear-gradient(to right, rgba(255,255,255,.035) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,.03) 1px, transparent 1px);
+      background-size: 52px 52px;
+      mask-image: radial-gradient(circle at 50% 12%, rgba(0,0,0,1) 0%, rgba(0,0,0,.22) 55%, rgba(0,0,0,0) 82%);
+      opacity:.30;
+    }
+
+    .shell{
+      width:100%;
+      max-width:1180px;
+      border-radius:28px;
+      border:1px solid var(--border);
+      background: linear-gradient(180deg, rgba(7,10,20,.82), rgba(4,6,12,.92));
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+
+    .shell::after{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background: radial-gradient(900px 300px at 50% 0%, rgba(79,139,255,.10), transparent 60%);
+      pointer-events:none;
+    }
+
+    .wrap{
+      padding:26px 34px 18px;
+      position:relative;
+      z-index:2;
+    }
+
+    /* TOP BAR */
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:18px;
+      padding-bottom:16px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width: 260px;
+    }
+
+    .logo{
+      width:44px;height:44px;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
+      background: linear-gradient(135deg, rgba(79,139,255,.20), rgba(35,201,183,.14));
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow: 0 12px 30px rgba(0,0,0,.35);
+      flex-shrink:0;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .logo::after{
+      content:"";
+      position:absolute;
+      inset:-30%;
+      background: radial-gradient(circle, rgba(255,255,255,.12), transparent 55%);
+      transform: rotate(25deg);
+      opacity:.45;
+    }
+
+    .logo svg{
+      width:20px;height:20px;
+      opacity:.95;
+      position:relative;
+      z-index:2;
+    }
+
+    .brandText{
+      display:flex;
+      flex-direction:column;
+      gap:3px;
+      line-height:1.1;
+    }
+
+    .brandText strong{
+      font-size:.94rem;
+      letter-spacing:.02em;
+    }
+
+    .brandText span{
+      font-size:.72rem;
+      letter-spacing:.20em;
+      text-transform:uppercase;
+      color:var(--muted2);
+    }
+
+    .rightStatus{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .pill{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid var(--border2);
+      background: rgba(15,23,42,.55);
+      color: var(--muted);
+      font-size:.78rem;
+      backdrop-filter: blur(10px);
+      white-space:nowrap;
+    }
+
+    .dot{
+      width:10px;height:10px;border-radius:50%;
+      background: linear-gradient(135deg, var(--teal), var(--blue));
+      box-shadow: 0 0 0 4px rgba(79,139,255,.10);
+    }
+
+    .mini{
+      color: var(--muted2);
+      font-size:.78rem;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+    }
+
+    /* HERO */
+    .hero{
+      text-align:center;
+      padding:24px 10px 10px;
+    }
+
+    .hero h1{
+      max-width: 980px;
+      margin: 0 auto;
+      font-size: 2.05rem;
+      letter-spacing:.01em;
+      line-height:1.22;
+      color: rgba(247,250,252,.97);
+    }
+
+    .hero p{
+      max-width: 880px;
+      margin: 12px auto 0;
+      font-size:.98rem;
+      color:#cbd5f5;
+      line-height:1.65;
+    }
+
+    .divider{
+      margin: 18px auto 0;
+      height:1px;
+      max-width: 980px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.10), transparent);
+    }
+
+    /* KPI TABLE (BORDERED - INDUSTRY STYLE) */
+.kpi-table-wrap{
+  margin-top:18px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.12);
+  background: linear-gradient(180deg, rgba(10,14,26,.85), rgba(10,14,26,.52));
+  backdrop-filter: blur(16px);
+  padding:14px 16px 14px;
+  overflow:hidden;
+  position:relative;
+}
+
+.kpi-table-wrap::before{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  background: radial-gradient(900px 220px at 50% 0%, rgba(35,201,183,.10), transparent 60%);
+  pointer-events:none;
+}
+
+.kpi-top{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-bottom:12px;
+  position:relative;
+  z-index:2;
+}
+
+.kpi-table-title{
+  font-size:.78rem;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--muted2);
+}
+
+.kpi-note{
+  font-size:.78rem;
+  color: rgba(163,173,198,.85);
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.03);
+  padding:7px 10px;
+  border-radius:999px;
+  white-space:nowrap;
+}
+
+.kpi-table-scroll{
+  overflow-x:auto;
+  position:relative;
+  z-index:2;
+  border-radius:14px;
+}
+
+/* TABLE GRID LOOK */
+table.kpi-table{
+  width:100%;
+  border-collapse:separate;
+  border-spacing:0;
+  font-size:.88rem;
+  min-width: 720px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:14px;
+  overflow:hidden;
+  background: rgba(0,0,0,.18);
+}
+
+table.kpi-table thead th{
+  background: rgba(15,23,42,.92);
+  color: rgba(203,213,245,.95);
+  font-weight:800;
+  font-size:.76rem;
+  text-transform:uppercase;
+  letter-spacing:.14em;
+  padding:14px 14px;
+  border-bottom:1px solid rgba(255,255,255,.14);
+}
+
+/* Vertical column separators */
+table.kpi-table thead th:not(:last-child),
+table.kpi-table tbody td:not(:last-child){
+  border-right:1px solid rgba(255,255,255,.10);
+}
+
+/* Row separators */
+table.kpi-table tbody td{
+  padding:14px 14px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  color: rgba(247,250,252,.92);
+  background: rgba(255,255,255,.01);
+}
+
+/* Remove last row bottom border */
+table.kpi-table tbody tr:last-child td{
+  border-bottom:none;
+}
+
+/* Row hover = subtle */
+table.kpi-table tbody tr{
+  transition: background .16s ease, transform .16s ease;
+}
+
+table.kpi-table tbody tr:hover td{
+  background: rgba(255,255,255,.03);
+}
+
+/* Left column (metric names) */
+table.kpi-table td.label{
+  color: rgba(203,213,245,.92);
+  font-weight:700;
+  width:34%;
+}
+
+/* Column highlighting (bio vs chem) */
+table.kpi-table tbody td.bio{
+  color:#a5f3fc;
+  font-weight:800;
+  background: rgba(35,201,183,.04);
+}
+
+table.kpi-table tbody td.chem{
+  color:#bfdbfe;
+  font-weight:800;
+  background: rgba(79,139,255,.04);
+}
+
+/* Header highlighting to match columns */
+table.kpi-table thead th:nth-child(2){
+  box-shadow: inset 0 -1px 0 rgba(35,201,183,.22);
+}
+
+table.kpi-table thead th:nth-child(3){
+  box-shadow: inset 0 -1px 0 rgba(79,139,255,.22);
+}
+
+    /* CARDS SECTION */
+    .section{
+      margin-top:18px;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:16px;
+      align-items:stretch;
+    }
+
+    .card{
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, var(--card), var(--card2));
+      backdrop-filter: blur(14px);
+      padding:18px 18px;
+      transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+      position:relative;
+      overflow:hidden;
+      min-height: 210px;
+    }
+
+    .card:hover{
+      transform: translateY(-3px);
+      border-color: rgba(255,255,255,.16);
+      box-shadow: 0 18px 55px rgba(0,0,0,.55);
+    }
+
+    /* Make BOTH cards look consistent */
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background: radial-gradient(700px 220px at 15% 0%, rgba(79,139,255,.18), transparent 60%);
+      pointer-events:none;
+      opacity:.75;
+    }
+
+    .cardHead{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      position:relative;
+      z-index:2;
+    }
+
+    .cardTitle{
+      display:flex;
+      align-items:flex-start;
+      gap:12px;
+    }
+
+    .cardIcon{
+      width:46px;height:46px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      flex-shrink:0;
+      box-shadow: 0 10px 26px rgba(0,0,0,.35);
+    }
+
+    .cardIcon svg{width:18px;height:18px;opacity:.95}
+
+    .cardTitleText{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+    }
+
+    .cardTitleText strong{
+      font-size:1.08rem;
+      letter-spacing:.01em;
+    }
+
+    .badgeRow{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .chip{
+      font-size:.74rem;
+      color: var(--muted);
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      padding:6px 10px;
+      border-radius:999px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      white-space:nowrap;
+    }
+
+    .chip .tinyDot{
+      width:7px;height:7px;border-radius:50%;
+      background: rgba(255,255,255,.18);
+    }
+
+    .chip.live{
+      border-color: rgba(35,201,183,.22);
+      background: rgba(35,201,183,.06);
+    }
+
+    .chip.live .tinyDot{
+      background: rgba(35,201,183,.95);
+      box-shadow: 0 0 0 3px rgba(35,201,183,.12);
+    }
+
+    .cardBody{
+      margin-top:14px;
+      position:relative;
+      z-index:2;
+    }
+
+    .actions{
+      margin-top:8px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+      position:relative;
+      z-index:2;
+    }
+
+    /* BUTTONS */
+    .btn{
+      border-radius: 16px;
+      padding:12px 14px;
+      border:1px solid rgba(255,255,255,.12);
+      cursor:pointer;
+      transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease, background .16s ease;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      user-select:none;
+      outline:none;
+      font-weight:700;
+      letter-spacing:.01em;
+      min-width: 200px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .btn::after{
+      content:"";
+      position:absolute;
+      inset:-40%;
+      background: radial-gradient(circle, rgba(255,255,255,.14), transparent 55%);
+      transform: translateX(-35%);
+      opacity:0;
+      transition: opacity .18s ease;
+      pointer-events:none;
+    }
+
+    .btn:hover::after{opacity:.55}
+
+    .btn:focus-visible{
+      box-shadow: var(--glowBlue);
+      border-color: rgba(79,139,255,.65);
+    }
+
+    /* Make BOTH Open buttons same premium style */
+    .btn.primary{
+      background: linear-gradient(180deg, rgba(79,139,255,.96), rgba(79,139,255,.68));
+      border-color: rgba(79,139,255,.55);
+      color: white;
+      box-shadow: 0 14px 36px rgba(79,139,255,.16);
+    }
+
+    .btn.primary:hover{
+      transform: translateY(-2px);
+      box-shadow: 0 18px 52px rgba(79,139,255,.22);
+    }
+
+    .btnIcon{
+      width:18px;height:18px;
+      opacity:.95;
+    }
+
+    .link{
+      color: rgba(203,213,245,.85);
+      font-size:.88rem;
+      text-decoration:none;
+      border-bottom: 1px solid rgba(203,213,245,.25);
+      padding-bottom:2px;
+      transition: color .18s ease, border-color .18s ease, opacity .18s ease;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      font-weight:600;
+      opacity:.92;
+    }
+
+    .link:hover{
+      color: rgba(79,139,255,.95);
+      border-color: rgba(79,139,255,.55);
+      opacity:1;
+    }
+
+    /* FOOTER */
+    .footer{
+      margin-top:18px;
+      padding-top:16px;
+      border-top:1px solid rgba(255,255,255,.08);
+      display:grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap:14px;
+      color: var(--muted2);
+      font-size:.82rem;
+    }
+
+    .footCol h4{
+      font-size:.72rem;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color: rgba(163,173,198,.95);
+      margin-bottom:10px;
+    }
+
+    .footCol ul{
+      list-style:none;
+      display:grid;
+      gap:8px;
+    }
+
+    .footCol li{
+      color: rgba(127,138,166,.95);
+    }
+
+    .bottomLine{
+      margin-top:14px;
+      padding-top:12px;
+      border-top:1px solid rgba(255,255,255,.06);
+      display:flex;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      gap:10px;
+      color: rgba(127,138,166,.90);
+      font-size:.78rem;
+    }
+
+    @media (max-width: 980px){
+      .section{grid-template-columns:1fr}
+      .footer{grid-template-columns:1fr}
+      .wrap{padding:22px}
+      .hero h1{font-size:1.6rem}
+      .brand{min-width:auto}
+      table.kpi-table{min-width: 660px;}
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="shell">
+    <div class="wrap">
+
+      <!-- TOP BAR -->
+      <div class="topbar">
+        <div class="brand">
+          <div class="logo" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M12 3l9 5-9 5-9-5 9-5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+              <path d="M3 12l9 5 9-5" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+              <path d="M3 16l9 5 9-5" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="brandText">
+            <strong>SDG7 · Affordable & Clean Energy</strong>
+          </div>
+        </div>
+
+        <div class="rightStatus">
+          <div class="pill">
+            <span class="dot"></span>
+            Twins Operational
+          </div>
+          <div class="mini" id="syncText">Last Sync: --:--:--</div>
+          <div class="mini">Mode: Simulation</div>
+          <div class="mini">v1.0.0</div>
+        </div>
+      </div>
+
+      <!-- HERO -->
+      <div class="hero">
+        <h1>Li-Ion Battery Leaching Twin</h1>
+
+        <p>
+          A Digital Twin Framework for Optimizing Microbial and Hydrometallurgical Leaching of Spent Lithium-Ion Batteries.
+
+        </p>
+
+        <div class="divider"></div>
+
+        <!-- KPI TABLE -->
+        <div class="kpi-table-wrap">
+          <div class="kpi-top">
+            <div class="kpi-table-title">Lab-Scale Comparison · Bio vs Chem</div>
+            <div class="kpi-note">Pitch-ready · Quick decision view</div>
+          </div>
+
+          <div class="kpi-table-scroll">
+            <table class="kpi-table">
+              <thead>
+                <tr>
+                  <th>Metric</th>
+                  <th>Bio Twin (lab)</th>
+                  <th>Chem Twin (lab)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="label">Recovery yield</td>
+                  <td class="bio">1.1 g metal / kg BM </td>
+                  <td class="chem">309 g metal / kg BM</td>
+                </tr>
+                <tr>
+                  <td class="label">Acid / reagent intensity</td>
+                  <td class="bio">very low acid </td>
+                  <td class="chem">24.5 kg acid / kg BM</td>
+                </tr>
+                <tr>
+                  <td class="label">Energy intensity</td>
+                  <td class="bio">15,000 kWh / kg BM</td>
+                  <td class="chem">1,200 kWh / kg BM</td>
+                </tr>
+                <tr>
+                  <td class="label">Typical duration</td>
+                  <td class="bio">~16 days</td>
+                  <td class="chem">~1–2 hours</td>
+                </tr>
+                <tr>
+                  <td class="label">Lab-scale cost (best)</td>
+                  <td class="bio">≈ ₹3×10⁵ per g metal</td>
+                  <td class="chem">≈ ₹19 per g metal</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- EXEC STRIP REMOVED (as requested) -->
+
+        </div>
+      </div>
+
+      <!-- TWIN CARDS -->
+      <div class="section">
+
+        <!-- BIO -->
+        <div class="card">
+          <div class="cardHead">
+            <div class="cardTitle">
+              <div class="cardIcon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M10 2h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M10 2v6l-5.5 9.5A3 3 0 0 0 7.1 22h9.8a3 3 0 0 0 2.6-4.5L14 8V2"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M8.5 14h7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </div>
+
+              <div class="cardTitleText">
+                <strong>Bio-Leaching Twin</strong>
+                <div class="badgeRow">
+                  <div class="chip live">
+                    <span class="tinyDot"></span>
+                    Live · Production
+                  </div>
+                  <div class="chip">
+                    <span class="tinyDot"></span>
+                    Microbial leaching
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="chip">
+              <span class="tinyDot"></span>
+              OPERATIONAL
+            </div>
+          </div>
+
+          <div class="cardBody">
+            <div class="actions">
+              <button class="btn primary" onclick="openBioTwin()">
+                Open Bio Twin
+                <svg class="btnIcon" viewBox="0 0 24 24" fill="none">
+                  <path d="M7 17L17 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M10 7h7v7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              <a class="link" href="#" onclick="openBioDetails(event)">View model →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- CHEMICAL -->
+        <div class="card">
+          <div class="cardHead">
+            <div class="cardTitle">
+              <div class="cardIcon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M9 2h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M10 2v6l-4.5 6.5A4 4 0 0 0 8.8 21h6.4a4 4 0 0 0 3.3-6.5L14 8V2"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M9 16h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </div>
+
+              <div class="cardTitleText">
+                <strong>Chemical Leaching Twin</strong>
+                <div class="badgeRow">
+                  <div class="chip live">
+                    <span class="tinyDot"></span>
+                    Live · Production
+                  </div>
+                  <div class="chip">
+                    <span class="tinyDot"></span>
+                    Acid leaching
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="chip">
+              <span class="tinyDot"></span>
+              OPERATIONAL
+            </div>
+          </div>
+
+          <div class="cardBody">
+            <div class="actions">
+              <button class="btn primary" onclick="openChemicalTwin()">
+                Open Chem Twin
+                <svg class="btnIcon" viewBox="0 0 24 24" fill="none">
+                  <path d="M7 17L17 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M10 7h7v7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              <a class="link" href="#" onclick="openChemicalDetails(event)">View model →</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- FOOTER -->
+      <div class="footer">
+        <div class="footCol">
+          <h4>Project Team</h4>
+          <ul>
+            <li>Supreet Naik</li>
+            <li>Sri Prada Ramesh</li>
+            <li>Ananya Sudarsan</li>
+            <li>Rachana M</li>
+          </ul>
+        </div>
+
+        <div class="footCol">
+          <h4>Academic Supervision</h4>
+          <ul>
+            <li>Dr. Anjaneya G</li>
+            <li>Dr. C K Nagendra Gupta</li>
+          </ul>
+        </div>
+
+        <div class="footCol">
+          <h4>Institution & Compliance</h4>
+          <ul>
+            <li>R. V. College of Engineering</li>
+            <li>Academic Year 2025–2026</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bottomLine">
+        <div>© 2026 Digital Twin Framework for Sustainable Metal Recovery</div>
+        <div>Build: v1.0.0 • Last Updated: <span id="dateText">--</span></div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // 🔥 Paste your Drive handbook links here
+    const BIO_MODEL_HANDBOOK = "https://drive.google.com/file/d/16xU7vkWx3Mi9drFzENyi86c-XrW6yUFb/view?usp=drive_link";
+    const CHEM_MODEL_HANDBOOK = "PASTE_CHEM_DRIVE_LINK_HERE";
+
+    function openBioTwin(){
+      window.open("https://biodigitaltwin.streamlit.app/","_blank");
+    }
+
+    function openChemicalTwin(){
+      window.open("https://chemicaltwin.streamlit.app/","_blank");
+    }
+
+    function openBioDetails(e){
+      e.preventDefault();
+      window.open(BIO_MODEL_HANDBOOK, "_blank");
+    }
+
+    function openChemicalDetails(e){
+      e.preventDefault();
+      window.open(CHEM_MODEL_HANDBOOK, "_blank");
+    }
+
+    function pad(n){ return String(n).padStart(2,"0"); }
+
+    function updateSync(){
+      const now = new Date();
+      const t = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+      document.getElementById("syncText").textContent = `Last Sync: ${t}`;
+      document.getElementById("dateText").textContent = now.toDateString();
+    }
+
+    updateSync();
+    setInterval(updateSync, 1000);
+  </script>
+
+</body>
+</html>
